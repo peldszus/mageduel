@@ -1,3 +1,4 @@
+import os
 import random
 import re
 import sys
@@ -184,6 +185,36 @@ class OpenAIModel:
             n=1,
         )
         return response["choices"][0]["text"]
+
+
+class AI21Model:
+    """
+    The AI21 jurassic models.
+    In the beta you can get 10k tokens or 30k tokens per day for
+    free for the large and the small model resp.
+    """
+
+    def __init__(self, model="j1-jumbo", temperature=0.7):
+        self.model = model
+        self.temperature = temperature
+        self.api_key = os.environ.get("AI21_API_KEY")
+
+    def completion(self, prompt):
+        """Return the completion from the AI21 model."""
+        payload = {
+            "prompt": prompt,
+            "numResults": 1,
+            "maxTokens": 256,
+            "stopSequences": [STOP],
+            "topKReturn": 0,
+            "temperature": self.temperature,
+        }
+        response = requests.post(
+            f"https://api.ai21.com/studio/v1/{self.model}/complete",
+            headers={"Authorization": f"Bearer {self.api_key}"},
+            json=payload,
+        ).json()
+        return response["completions"][0]["data"]["text"]
 
 
 class GptJModel:
@@ -532,8 +563,9 @@ def title_screen():
 
 if __name__ == "__main__":
     # model = OpenAIModel(engine="curie", temperature=0.7)
-    model = GptJModel(temperature=0.7)
+    # model = GptJModel(temperature=0.7)
     # model = MockModel()
+    model = AI21Model(model="j1-jumbo", temperature=0.7)
     duell = MageDuell(model)
     title_screen()
     duell.game_loop()
