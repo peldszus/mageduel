@@ -23,16 +23,16 @@ import openai
 
 TITLE = """
 
- ███▄ ▄███▓ ▄▄▄        ▄████ ▓█████    ▓█████▄  █    ██ ▓█████  ██▓     ██▓    
-▓██▒▀█▀ ██▒▒████▄     ██▒ ▀█▒▓█   ▀    ▒██▀ ██▌ ██  ▓██▒▓█   ▀ ▓██▒    ▓██▒    
-▓██    ▓██░▒██  ▀█▄  ▒██░▄▄▄░▒███      ░██   █▌▓██  ▒██░▒███   ▒██░    ▒██░    
-▒██    ▒██ ░██▄▄▄▄██ ░▓█  ██▓▒▓█  ▄    ░▓█▄   ▌▓▓█  ░██░▒▓█  ▄ ▒██░    ▒██░    
-▒██▒   ░██▒ ▓█   ▓██▒░▒▓███▀▒░▒████▒   ░▒████▓ ▒▒█████▓ ░▒████▒░██████▒░██████▒
-░ ▒░   ░  ░ ▒▒   ▓▒█░ ░▒   ▒ ░░ ▒░ ░    ▒▒▓  ▒ ░▒▓▒ ▒ ▒ ░░ ▒░ ░░ ▒░▓  ░░ ▒░▓  ░
-░  ░      ░  ▒   ▒▒ ░  ░   ░  ░ ░  ░    ░ ▒  ▒ ░░▒░ ░ ░  ░ ░  ░░ ░ ▒  ░░ ░ ▒  ░
-░      ░     ░   ▒   ░ ░   ░    ░       ░ ░  ░  ░░░ ░ ░    ░     ░ ░     ░ ░   
-       ░         ░  ░      ░    ░  ░      ░       ░        ░  ░    ░  ░    ░  ░
-                                        ░                                      
+     ███▄ ▄███▓ ▄▄▄        ▄████ ▓█████    ▓█████▄  █    ██ ▓█████  ██▓
+    ▓██▒▀█▀ ██▒▒████▄     ██▒ ▀█▒▓█   ▀    ▒██▀ ██▌ ██  ▓██▒▓█   ▀ ▓██▒
+    ▓██    ▓██░▒██  ▀█▄  ▒██░▄▄▄░▒███      ░██   █▌▓██  ▒██░▒███   ▒██░
+    ▒██    ▒██ ░██▄▄▄▄██ ░▓█  ██▓▒▓█  ▄    ░▓█▄   ▌▓▓█  ░██░▒▓█  ▄ ▒██░
+    ▒██▒   ░██▒ ▓█   ▓██▒░▒▓███▀▒░▒████▒   ░▒████▓ ▒▒█████▓ ░▒████▒░██████▒
+    ░ ▒░   ░  ░ ▒▒   ▓▒█░ ░▒   ▒ ░░ ▒░ ░    ▒▒▓  ▒ ░▒▓▒ ▒ ▒ ░░ ▒░ ░░ ▒░▓  ░
+    ░  ░      ░  ▒   ▒▒ ░  ░   ░  ░ ░  ░    ░ ▒  ▒ ░░▒░ ░ ░  ░ ░  ░░ ░ ▒  ░
+    ░      ░     ░   ▒   ░ ░   ░    ░       ░ ░  ░  ░░░ ░ ░    ░     ░ ░
+           ░         ░  ░      ░    ░  ░      ░       ░        ░  ░    ░  ░
+                                            ░
 """
 
 SUBTITLE = """
@@ -52,7 +52,7 @@ summon a monster, or the unique to summon a unique creature. You can modify a
 monster with a prefix- and or a suffix-card if you have any. Sometimes you'll
 get a blank card, a joker. You can decide on your own what the monster name, or
 the prefix, or the suffix should be. You'll start with five cards and draw one
-new card every round. So be sure not to use all cards too early, as the duell
+new card every round. So be sure not to use all cards too early, as the duel
 has multiple rounds. 
 
 # Note:
@@ -254,7 +254,7 @@ class MockModel:
         return GAME_PROMPT
 
 
-class MageDuell:
+class MageDuel:
     def __init__(self, model, best_of=5, hand_size=5):
         self.model = model
         self.deck = self.create_deck()
@@ -550,12 +550,14 @@ class MageDuell:
 def title_screen():
     click.clear()
     for line in TITLE.splitlines():
-        left, right = line[:38], line[38:]
+        left, right = line[:41], line[41:]
         click.echo(
             click.style(left, fg="blue", bold=True)
             + click.style(right, fg="red", bold=True)
         )
     click.secho(SUBTITLE, fg="bright_yellow", bold=True)
+    click.pause()
+    click.clear()
     click.echo(INSTRUCTION)
     click.pause()
     click.clear()
@@ -566,6 +568,6 @@ if __name__ == "__main__":
     # model = GptJModel(temperature=0.7)
     # model = MockModel()
     model = AI21Model(model="j1-jumbo", temperature=0.7)
-    duell = MageDuell(model)
+    duel = MageDuel(model)
     title_screen()
-    duell.game_loop()
+    duel.game_loop()
